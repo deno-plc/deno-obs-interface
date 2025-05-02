@@ -59,12 +59,24 @@ type EventMessage = {
     eventData: any,
 }
 
+/**
+ * The message that is sent to the OBS WebSocket server when a request is made.
+ * requestId is a unique identifier for the request.
+ * requestType is the type of request being made.
+ * requestData contains the data to be sent with the request.
+ */
 export type RequestMessage = {
     requestId: string,
     requestType: RequestTypes | string,
     requestData?: object,
 }
 
+/**
+ * The message that is sent back from the OBS WebSocket server when a request is made.
+ * requestId is a unique identifier for the request.
+ * requestStatus contains the result of the request.
+ * responseData contains the data returned from the request.
+ */
 export type RequestResponseMessage = {
     requestType: RequestTypes | string,
     requestId: string,
@@ -76,6 +88,13 @@ export type RequestResponseMessage = {
     responseData?: any,
 }
 
+/**
+ * The message that is sent to the OBS WebSocket server when a batch request is made.
+ * requestId is a unique identifier for the request.
+ * requests is an array of requests to be sent in the batch.
+ * haltOnFailure indicates whether the batch should stop on the first failure.
+ * executionType indicates how the requests should be executed.
+ */
 export type RequestBatchMessage = {
     requestId: string,
     requests: (Partial<RequestMessage> & Omit<RequestMessage, "requestId">)[],
@@ -83,6 +102,11 @@ export type RequestBatchMessage = {
     executionType?: number,
 }
 
+/**
+ * The message that is sent back from the OBS WebSocket server when a batch request is made.
+ * requestId is a unique identifier for the request.
+ * results is an array of results for each request in the batch.
+ */
 export type RequestBatchResponseMessage = {
     requestId: string,
     results: (Partial<RequestResponseMessage> & Omit<RequestResponseMessage, "requestId">)[],
