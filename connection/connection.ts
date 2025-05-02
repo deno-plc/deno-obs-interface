@@ -93,6 +93,11 @@ type OBSEventListener = {
     listener: (event: EventMessage) => void,
 }
 
+/**
+ * A class that represents a connection to the OBS WebSocket API.
+ * It handles the connection to the WebSocket server, authentication, and event subscriptions.
+ * It also provides methods to send requests and receive responses from the server.
+ */
 export class ObsConnection {
     private socket: WebSocket | null = null;
     private connected: boolean = false;

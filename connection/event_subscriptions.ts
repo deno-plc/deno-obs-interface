@@ -17,6 +17,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A list of all event subscriptions that are currently supported by the OBS WebSocket API.
+ * This list is not exhaustive and may change in the future as new features are added to OBS.
+ * The values are bitwise OR'd together to create a single number that can be used to subscribe to multiple events at once.
+ */
 export const enum EventSubscriptions {
     // Subscription value to receive events in the `General` category.
     GENERAL = 1 << 0,

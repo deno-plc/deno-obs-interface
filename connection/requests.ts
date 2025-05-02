@@ -17,6 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A list of all request types that are currently supported by the OBS WebSocket API.
+ * This list is not exhaustive and may change in the future as new features are added to OBS.
+ */
 export enum RequestTypes {
     GetHotkeyList = "GetHotkeyList",
     OpenInputInteractDialog = "OpenInputInteractDialog",
