@@ -101,7 +101,7 @@ export class ObsConnection {
     private identifiedPromiseResolve: (() => void) | null = null;
     private eventListeners: { eventType: string | undefined, listener: (event: EventMessage) => void }[] = []
 
-    static async initalize(host: string, port: number, password?: string, eventSubscriptions: number = EventSubscriptions.ALL, autoRetry: boolean = true) {
+    static async initalize(host: string, port: number, password?: string, eventSubscriptions: number = EventSubscriptions.ALL, autoRetry: boolean = true): Promise<ObsConnection> {
         const connection = new ObsConnection(host, port, password, eventSubscriptions, autoRetry);
 
         await connection.connect();
@@ -164,11 +164,11 @@ export class ObsConnection {
         return promise;
     }
 
-    isConnected() {
+    isConnected(): boolean {
         return this.connected;
     }
 
-    isIdentified() {
+    isIdentified(): boolean {
         return this.identified;
     }
 

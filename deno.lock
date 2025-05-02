@@ -1,16 +1,16 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@std/encoding@*": "1.0.8"
+    "jsr:@std/encoding@^1.0.10": "1.0.10"
   },
   "jsr": {
-    "@std/encoding@1.0.8": {
-      "integrity": "a6c8f3f933ab1bed66244f435d1dc0fd23a888e07195532122ddc3d5f8f0e6b4"
+    "@std/encoding@1.0.10": {
+      "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
     }
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/encoding@*"
+      "jsr:@std/encoding@^1.0.10"
     ]
   }
 }
