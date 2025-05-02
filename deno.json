@@ -5,5 +5,9 @@
   },
   "imports": {
     "@std/encoding/base64": "jsr:@std/encoding/base64"
-  }
+  },
+  "name": "@bewis09/obs-interface",
+  "version": "1.0.0",
+  "exports": "./mod.ts",
+  "license": "GPL-3.0"
 }

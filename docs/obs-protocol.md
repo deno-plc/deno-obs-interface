@@ -1,6 +1,3 @@
-<!-- This file was automatically generated. Do not edit directly! -->
-<!-- markdownlint-disable no-bare-urls -->
-
 # obs-websocket 5.x.x Protocol
 
 ## Main Table of Contents
