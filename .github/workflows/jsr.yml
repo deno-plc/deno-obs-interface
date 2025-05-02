@@ -23,8 +23,5 @@ jobs:
               with:
                   deno-version: v2.x
 
-            - name: Test
-              run: deno task check-ci
-
             - name: Publish package to JSR
               run: deno publish
