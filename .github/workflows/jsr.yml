@@ -3,7 +3,7 @@ name: JSR Publish
 on:
     push:
         branches:
-            - publish
+            - main
 
 jobs:
     publish:
