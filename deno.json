@@ -3,8 +3,8 @@
     "dev": "deno run --watch main.ts",
     "example": "deno run --allow-all --env=.env --watch example/example.ts"
   },
-  "name": "@bewis09/obs-interface",
-  "version": "1.0.3",
+  "name": "@deno-plc/obs-interface",
+  "version": "1.0.4",
   "exports": "./mod.ts",
   "license": "GPL-3.0",
   "imports": {
