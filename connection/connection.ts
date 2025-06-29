@@ -28,36 +28,36 @@ type OBSMessage<T> = {
 };
 
 type HelloMessage = {
-    obsStudioVersion: string,
-    obsWebSocketVersion: string,
-    rpcVersion: number,
+    obsStudioVersion: string;
+    obsWebSocketVersion: string;
+    rpcVersion: number;
     authentication?: {
-        challenge: string,
-        salt: string,
-    }
-}
+        challenge: string;
+        salt: string;
+    };
+};
 
 type IdentifyMessage = {
-    rpcVersion: number,
-    authentication?: string,
+    rpcVersion: number;
+    authentication?: string;
     /** See {@link EventSubscriptions} for the values of this field */
-    eventSubscriptions?: number,
-}
+    eventSubscriptions?: number;
+};
 
 type IdentifiedMessage = {
-    negotiatedRpcVersion: number,
-}
+    negotiatedRpcVersion: number;
+};
 
 type ReidentifiedMessage = {
     /** See {@link EventSubscriptions} for the values of this field */
-    eventSubscriptions: number
-}
+    eventSubscriptions: number;
+};
 
 type EventMessage = {
-    eventType: string,
-    eventIntent: number,
-    eventData: any,
-}
+    eventType: string;
+    eventIntent: number;
+    eventData: any;
+};
 
 /**
  * The message that is sent to the OBS WebSocket server when a request is made.
@@ -66,10 +66,10 @@ type EventMessage = {
  * requestData contains the data to be sent with the request.
  */
 export type RequestMessage = {
-    requestId: string,
-    requestType: RequestTypes | string,
-    requestData?: object,
-}
+    requestId: string;
+    requestType: RequestTypes | string;
+    requestData?: object;
+};
 
 /**
  * The message that is sent back from the OBS WebSocket server when a request is made.
@@ -78,15 +78,15 @@ export type RequestMessage = {
  * responseData contains the data returned from the request.
  */
 export type RequestResponseMessage = {
-    requestType: RequestTypes | string,
-    requestId: string,
+    requestType: RequestTypes | string;
+    requestId: string;
     requestStatus: {
-        result: boolean,
-        code: number,
-        comment?: string,
-    },
-    responseData?: any,
-}
+        result: boolean;
+        code: number;
+        comment?: string;
+    };
+    responseData?: any;
+};
 
 /**
  * The message that is sent to the OBS WebSocket server when a batch request is made.
@@ -96,11 +96,11 @@ export type RequestResponseMessage = {
  * executionType indicates how the requests should be executed.
  */
 export type RequestBatchMessage = {
-    requestId: string,
-    requests: (Partial<RequestMessage> & Omit<RequestMessage, "requestId">)[],
-    haltOnFailure?: boolean,
-    executionType?: number,
-}
+    requestId: string;
+    requests: (Partial<RequestMessage> & Omit<RequestMessage, "requestId">)[];
+    haltOnFailure?: boolean;
+    executionType?: number;
+};
 
 /**
  * The message that is sent back from the OBS WebSocket server when a batch request is made.
@@ -108,14 +108,18 @@ export type RequestBatchMessage = {
  * results is an array of results for each request in the batch.
  */
 export type RequestBatchResponseMessage = {
-    requestId: string,
-    results: (Partial<RequestResponseMessage> & Omit<RequestResponseMessage, "requestId">)[],
-}
+    requestId: string;
+    results:
+        (
+            & Partial<RequestResponseMessage>
+            & Omit<RequestResponseMessage, "requestId">
+        )[];
+};
 
 type OBSEventListener = {
-    eventType: string | undefined,
-    listener: (event: EventMessage) => void,
-}
+    eventType: string | undefined;
+    listener: (event: EventMessage) => void;
+};
 
 /**
  * A class that represents a connection to the OBS WebSocket API.
@@ -128,15 +132,30 @@ export class ObsConnection {
     private identified: boolean = false;
     private identifiedPromise: Promise<void> | null = null;
     private identifiedPromiseResolve: (() => void) | null = null;
-    private eventListeners: { eventType: string | undefined, listener: (event: EventMessage) => void }[] = []
+    private eventListeners: {
+        eventType: string | undefined;
+        listener: (event: EventMessage) => void;
+    }[] = [];
 
-    static async initalize(host: string, port: number, password?: string, eventSubscriptions: number = EventSubscriptions.ALL, autoRetry: boolean = true): Promise<ObsConnection> {
-        const connection = new ObsConnection(host, port, password, eventSubscriptions, autoRetry);
+    static async initalize(
+        host: string,
+        port: number,
+        password?: string,
+        eventSubscriptions: number = EventSubscriptions.ALL,
+        autoRetry: boolean = true,
+    ): Promise<ObsConnection> {
+        const connection = new ObsConnection(
+            host,
+            port,
+            password,
+            eventSubscriptions,
+            autoRetry,
+        );
 
         await connection.connect();
         await connection.waitForInitialization();
 
-        return connection
+        return connection;
     }
 
     private constructor(
@@ -145,10 +164,10 @@ export class ObsConnection {
         private readonly password?: string,
         public readonly eventSubscriptions: number = EventSubscriptions.ALL,
         public autoRetry: boolean = true,
-    ) { }
+    ) {}
 
     private connect() {
-        const { promise, resolve, reject } = Promise.withResolvers<void>()
+        const { promise, resolve, reject } = Promise.withResolvers<void>();
 
         if (this.socket) {
             this.socket.readyState === WebSocket.OPEN && this.socket.close();
@@ -156,7 +175,9 @@ export class ObsConnection {
 
         this.socket = new WebSocket(`ws://${this.host}:${this.port}`);
 
-        this.identifiedPromise = new Promise((resolve) => { this.identifiedPromiseResolve = resolve; });
+        this.identifiedPromise = new Promise((resolve) => {
+            this.identifiedPromiseResolve = resolve;
+        });
 
         this.socket.addEventListener("open", () => {
             console.log("[OBS] Connected to OBS WebSocket");
@@ -167,7 +188,9 @@ export class ObsConnection {
         this.socket.addEventListener("close", (e) => {
             this.connected = false;
             this.identified = false;
-            this.identifiedPromise = new Promise((resolve) => { this.identifiedPromiseResolve = resolve; });
+            this.identifiedPromise = new Promise((resolve) => {
+                this.identifiedPromiseResolve = resolve;
+            });
             console.log("[OBS] Disconnected from OBS WebSocket: ", e.reason);
 
             if (!this.autoRetry) {
@@ -182,7 +205,10 @@ export class ObsConnection {
         });
 
         this.socket.addEventListener("error", (error) => {
-            console.error("[OBS]", "message" in error ? error.message : "WebSocket error");
+            console.error(
+                "[OBS]",
+                "message" in error ? error.message : "WebSocket error",
+            );
         });
 
         this.socket.addEventListener("message", (event) => {
@@ -202,8 +228,9 @@ export class ObsConnection {
     }
 
     async waitForInitialization() {
-        if (this.connected && this.identified)
+        if (this.connected && this.identified) {
             return;
+        }
 
         await this.identifiedPromise;
 
@@ -233,7 +260,9 @@ export class ObsConnection {
     }
 
     private async processHelloMessage(data: HelloMessage) {
-        const auth = this.password ? await this.generateAuthentication(data) : undefined;
+        const auth = this.password
+            ? await this.generateAuthentication(data)
+            : undefined;
 
         const identifyMessage: IdentifyMessage = {
             rpcVersion: data.rpcVersion,
@@ -255,7 +284,10 @@ export class ObsConnection {
 
     private processEventMessage(data: EventMessage) {
         this.eventListeners.forEach((listener) => {
-            if (listener.eventType === undefined || listener.eventType === data.eventType) {
+            if (
+                listener.eventType === undefined ||
+                listener.eventType === data.eventType
+            ) {
                 listener.listener(data);
             }
         });
@@ -264,19 +296,30 @@ export class ObsConnection {
     private async generateAuthentication(data: HelloMessage) {
         const { challenge, salt } = data.authentication!;
         const conc = this.password + salt;
-        const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(conc));
+        const hash = await crypto.subtle.digest(
+            "SHA-256",
+            new TextEncoder().encode(conc),
+        );
         const base64 = encodeBase64(new Uint8Array(hash));
         const conc2 = base64 + challenge;
-        const hash2 = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(conc2));
+        const hash2 = await crypto.subtle.digest(
+            "SHA-256",
+            new TextEncoder().encode(conc2),
+        );
         const auth = encodeBase64(new Uint8Array(hash2));
 
         return auth;
     }
 
-    public sendRequest(requestType: RequestTypes | string, requestData?: any): Promise<RequestResponseMessage> {
+    public sendRequest(
+        requestType: RequestTypes | string,
+        requestData?: any,
+    ): Promise<RequestResponseMessage> {
         return new Promise<RequestResponseMessage>((resolve, reject) => {
             if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-                reject(new Error("WebSocket is not open. Cannot send request."));
+                reject(
+                    new Error("WebSocket is not open. Cannot send request."),
+                );
                 return;
             }
 
@@ -294,7 +337,9 @@ export class ObsConnection {
             }));
 
             const handleResponse = (event: MessageEvent) => {
-                const data = JSON.parse(event.data) as OBSMessage<RequestResponseMessage>;
+                const data = JSON.parse(event.data) as OBSMessage<
+                    RequestResponseMessage
+                >;
 
                 if (data.d.requestId === requestId) {
                     this.socket!.removeEventListener("message", handleResponse);
@@ -306,10 +351,16 @@ export class ObsConnection {
         });
     }
 
-    public sendBatchRequest(requests: (Omit<RequestMessage, "requestId">)[], haltOnFailure: boolean = false, executionType: number = 0): Promise<RequestBatchResponseMessage> {
+    public sendBatchRequest(
+        requests: (Omit<RequestMessage, "requestId">)[],
+        haltOnFailure: boolean = false,
+        executionType: number = 0,
+    ): Promise<RequestBatchResponseMessage> {
         return new Promise<RequestBatchResponseMessage>((resolve, reject) => {
             if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-                reject(new Error("WebSocket is not open. Cannot send request."));
+                reject(
+                    new Error("WebSocket is not open. Cannot send request."),
+                );
                 return;
             }
 
@@ -328,7 +379,9 @@ export class ObsConnection {
             }));
 
             const handleResponse = (event: MessageEvent) => {
-                const data = JSON.parse(event.data) as OBSMessage<RequestBatchResponseMessage>;
+                const data = JSON.parse(event.data) as OBSMessage<
+                    RequestBatchResponseMessage
+                >;
 
                 if (data.d.requestId === requestId) {
                     this.socket!.removeEventListener("message", handleResponse);
@@ -340,8 +393,11 @@ export class ObsConnection {
         });
     }
 
-    public addEventListener(eventType: string | undefined, callback: (event: EventMessage) => void): OBSEventListener {
-        const a = { eventType, listener: callback }
+    public addEventListener(
+        eventType: string | undefined,
+        callback: (event: EventMessage) => void,
+    ): OBSEventListener {
+        const a = { eventType, listener: callback };
 
         this.eventListeners.push(a);
 
@@ -353,6 +409,12 @@ export class ObsConnection {
 
         if (index !== -1) {
             this.eventListeners.splice(index, 1);
+        }
+    }
+
+    public close() {
+        if (this.socket) {
+            this.socket.close();
         }
     }
 }

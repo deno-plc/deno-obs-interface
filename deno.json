@@ -1,13 +1,16 @@
 {
-  "tasks": {
-    "dev": "deno run --watch main.ts",
-    "example": "deno run --allow-all --env=.env --watch example/example.ts"
-  },
-  "name": "@deno-plc/obs-interface",
-  "version": "1.0.4",
-  "exports": "./mod.ts",
-  "license": "GPL-3.0",
-  "imports": {
-    "@std/encoding": "jsr:@std/encoding@^1.0.10"
-  }
+    "tasks": {
+        "dev": "deno run --watch main.ts",
+        "example": "deno run --allow-all --env=.env --watch example/example.ts"
+    },
+    "fmt": {
+        "indentWidth": 4
+    },
+    "name": "@deno-plc/obs-interface",
+    "version": "1.0.5",
+    "exports": "./mod.ts",
+    "license": "GPL-3.0",
+    "imports": {
+        "@std/encoding": "jsr:@std/encoding@^1.0.10"
+    }
 }
