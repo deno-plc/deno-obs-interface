@@ -137,8 +137,8 @@ export class ObsConnection {
     }[] = [];
 
     static async initalize(
-        host: string,
-        port: number,
+        host?: string,
+        port?: number,
         password?: string,
         eventSubscriptions: number = EventSubscriptions.ALL,
         autoRetry: boolean = true,
