@@ -166,14 +166,6 @@ export class ObsConnection {
     ) {}
 
     private connect() {
-        if (!this.host || !this.port) {
-            setTimeout(() => {
-                this.connect();
-            }, 1000);
-
-            return Promise.resolve(void 0);
-        }
-
         const { promise, resolve, reject } = Promise.withResolvers<void>();
 
         if (this.socket) {
