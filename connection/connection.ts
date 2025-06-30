@@ -158,14 +158,18 @@ export class ObsConnection {
     }
 
     private constructor(
-        public readonly host: string,
-        public readonly port: number,
-        private readonly password?: string,
-        public readonly eventSubscriptions: number = EventSubscriptions.ALL,
+        public host?: string,
+        public port?: number,
+        private password?: string,
+        public eventSubscriptions: number = EventSubscriptions.ALL,
         public autoRetry: boolean = true,
     ) {}
 
     private connect() {
+        if (!this.host || !this.port) {
+            return Promise.resolve<void>(void 0);
+        }
+
         const { promise, resolve, reject } = Promise.withResolvers<void>();
 
         if (this.socket) {
@@ -419,8 +423,23 @@ export class ObsConnection {
             this.identified = false;
             this.identifiedPromise = null;
             this.identifiedPromiseResolve = null;
+            this.host = undefined;
+            this.port = undefined;
             this.eventListeners = [];
-            console.log("[OBS] WebSocket connection closed");
+            this.password = undefined;
         }
+    }
+
+    public redirect(
+        host: string,
+        port: number,
+        password?: string,
+    ) {
+        this.close();
+        this.host = host;
+        this.port = port;
+        this.password = password;
+
+        this.connect();
     }
 }
