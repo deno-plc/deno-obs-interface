@@ -109,11 +109,10 @@ export type RequestBatchMessage = {
  */
 export type RequestBatchResponseMessage = {
     requestId: string;
-    results:
-        (
-            & Partial<RequestResponseMessage>
-            & Omit<RequestResponseMessage, "requestId">
-        )[];
+    results: (
+        & Partial<RequestResponseMessage>
+        & Omit<RequestResponseMessage, "requestId">
+    )[];
 };
 
 type OBSEventListener = {
@@ -415,6 +414,13 @@ export class ObsConnection {
     public close() {
         if (this.socket) {
             this.socket.close();
+            this.socket = null;
+            this.connected = false;
+            this.identified = false;
+            this.identifiedPromise = null;
+            this.identifiedPromiseResolve = null;
+            this.eventListeners = [];
+            console.log("[OBS] WebSocket connection closed");
         }
     }
 }

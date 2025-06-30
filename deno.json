@@ -7,7 +7,7 @@
         "indentWidth": 4
     },
     "name": "@deno-plc/obs-interface",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "exports": "./mod.ts",
     "license": "GPL-3.0",
     "imports": {
