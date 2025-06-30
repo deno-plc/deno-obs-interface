@@ -425,6 +425,15 @@ export class ObsConnection {
         this.host = undefined;
         this.port = undefined;
         this.password = undefined;
+        this.connected = false;
+        this.identified = false;
+        this.identifiedPromise = null;
+        this.identifiedPromiseResolve = null;
+        this.eventListeners = [];
+        if (this.socket) {
+            this.socket.close();
+            this.socket = null;
+        }
     }
 
     public redirect(
@@ -432,6 +441,8 @@ export class ObsConnection {
         port: number,
         password?: string,
     ) {
+        this.close();
+
         this.host = host;
         this.port = port;
         this.password = password;
