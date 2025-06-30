@@ -167,7 +167,11 @@ export class ObsConnection {
 
     private connect() {
         if (!this.host || !this.port) {
-            return Promise.resolve<void>(void 0);
+            setTimeout(() => {
+                this.connect();
+            }, 1000);
+
+            return Promise.resolve(void 0);
         }
 
         const { promise, resolve, reject } = Promise.withResolvers<void>();
@@ -194,7 +198,13 @@ export class ObsConnection {
             this.identifiedPromise = new Promise((resolve) => {
                 this.identifiedPromiseResolve = resolve;
             });
-            console.log("[OBS] Disconnected from OBS WebSocket: ", e.reason);
+
+            if (this.host && this.port) {
+                console.log(
+                    "[OBS] Disconnected from OBS WebSocket: ",
+                    e.reason,
+                );
+            }
 
             if (!this.autoRetry) {
                 reject(new Error("Could not connect to OBS WebSocket"));
@@ -202,7 +212,9 @@ export class ObsConnection {
             }
 
             setTimeout(() => {
-                console.log("[OBS] Reconnecting...");
+                if (this.host && this.port) {
+                    console.log("[OBS] Reconnecting...");
+                }
                 this.connect().then(resolve).catch(reject);
             }, 1000);
         });
@@ -417,12 +429,6 @@ export class ObsConnection {
 
     public close() {
         if (this.socket) {
-            this.socket.close();
-            this.socket = null;
-            this.connected = false;
-            this.identified = false;
-            this.identifiedPromise = null;
-            this.identifiedPromiseResolve = null;
             this.host = undefined;
             this.port = undefined;
             this.eventListeners = [];
@@ -435,7 +441,6 @@ export class ObsConnection {
         port: number,
         password?: string,
     ) {
-        this.close();
         this.host = host;
         this.port = port;
         this.password = password;
