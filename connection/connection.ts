@@ -172,7 +172,7 @@ export class ObsConnection {
             this.socket.readyState === WebSocket.OPEN && this.socket.close();
         }
 
-        this.socket = new WebSocket(`ws://${this.host}:${this.port}`);
+        this.socket = new WebSocket(`ws://${this.host ?? 0}:${this.port ?? 0}`);
 
         this.identifiedPromise = new Promise((resolve) => {
             this.identifiedPromiseResolve = resolve;
