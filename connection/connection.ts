@@ -212,10 +212,12 @@ export class ObsConnection {
         });
 
         this.socket.addEventListener("error", (error) => {
-            console.error(
-                "[OBS]",
-                "message" in error ? error.message : "WebSocket error",
-            );
+            if (this.host && this.port) {
+                console.error(
+                    "[OBS]",
+                    "message" in error ? error.message : "WebSocket error",
+                );
+            }
         });
 
         this.socket.addEventListener("message", (event) => {
