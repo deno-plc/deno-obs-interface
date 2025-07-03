@@ -136,13 +136,13 @@ export class ObsConnection {
         listener: (event: EventMessage) => void;
     }[] = [];
 
-    static async initalize(
+    static initalize(
         host?: string,
         port?: number,
         password?: string,
         eventSubscriptions: number = EventSubscriptions.ALL,
         autoRetry: boolean = true,
-    ): Promise<ObsConnection> {
+    ): ObsConnection {
         const connection = new ObsConnection(
             host,
             port,
@@ -151,8 +151,7 @@ export class ObsConnection {
             autoRetry,
         );
 
-        await connection.connect();
-        await connection.waitForInitialization();
+        connection.connect();
 
         return connection;
     }
